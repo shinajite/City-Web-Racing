@@ -868,7 +868,12 @@ PlayerSettings:
   XboxOneOverrideIdentityName: 
   XboxOneOverrideIdentityPublisher: 
   vrEditorSettings: {}
-  cloudServicesEnabled: {}
+  cloudServicesEnabled:
+    Build: 0
+    Game Performance: 0
+    Purchasing: 0
+    UDP: 0
+    Unity Ads: 0
   luminIcon:
     m_Name: 
     m_ModelFolderPath: 
@@ -883,11 +888,11 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 0
   windowsGamepadBackendHint: 0
-  cloudProjectId: c138d42a-e183-4a8e-884f-9c7f0d67f62c
+  cloudProjectId: 6b77a5a8-82b5-48a0-841c-52dc65d717ba
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: virtue 2023-11-10_13-42-06
-  organizationId: shinajite
+  projectName: virtue (1)
+  organizationId: unity_mkpugzy8m1ka3w
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   playerDataPath: 
