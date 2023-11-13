@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
 
 public class RaceManager : MonoBehaviour
 {
@@ -9,17 +10,20 @@ public class RaceManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        MessageBroker.Default.Receive<GoalMsg>()
+            .Subscribe(x => Goal(x.playerName, x.goalTime))
+            .AddTo(this);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Goal(string name, float time)
     {
-        
+        logManager.AddLog(0, new string[] { "Goaled:" + name + " time:" + time.ToString()});
     }
+}
 
-    public void Goal(string name, string time)
-    {
-        logManager.AddLog(0, new string[] { name + ":" + time});
-    }
+// 送信するメッセージの型
+public class GoalMsg
+{
+    public string playerName { get; set; }
+    public float goalTime { get; set; }
 }

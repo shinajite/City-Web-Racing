@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
+using UniRx;
+using System;
+
 
 public class PlayerController : NetworkBehaviour
 {
@@ -140,7 +143,15 @@ public class PlayerController : NetworkBehaviour
 
         if (layerName == "Goal")
         {
-            raceManager.Goal("player", "00");
+            // 現在の時刻を取得
+            DateTime now = DateTime.Now;
+
+            // Unix エポックからの経過時間を取得
+            TimeSpan elapsedTime = now - new DateTime(1970, 1, 1);
+
+            // 経過時間を秒数に変換
+            float seconds = (float)elapsedTime.TotalSeconds;
+            MessageBroker.Default.Publish(new GoalMsg { playerName = "Player" + NetworkObject.NetworkObjectId, goalTime = seconds });
         }
     }
 }
