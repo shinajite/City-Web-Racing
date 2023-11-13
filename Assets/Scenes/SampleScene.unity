@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028326, g: 0.22571333, b: 0.30692202, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.3069224, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1626,7 +1626,7 @@ MonoBehaviour:
     _baseResolution: 0
   _suspendUpdate: 0
   _showTilesInHierarchy: 0
-  _updateInEditor: 1
+  _updateInEditor: 0
   _logSelectionStats: 0
   _createPhysicsMeshes: 1
 --- !u!1 &1336519283
@@ -2305,8 +2305,8 @@ MonoBehaviour:
   _longitude: 139.766735
   _height: 100
   _ecefX: -3959706.2226692666
-  _ecefY: 3350153.828155865
-  _ecefZ: 3699575.93228584
+  _ecefY: 3350153.8281558645
+  _ecefZ: 3699575.9322858397
   _scale: 1
 --- !u!4 &1856735912
 Transform:

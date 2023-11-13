@@ -84,7 +84,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 40
   maxDistance: 300
-  wireSpeed: 115
+  wireSpeed: 40
   jumpForce: 1500
   rotationSpeed: 100
   animator: {fileID: 230248326232808789}
