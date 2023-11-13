@@ -20,8 +20,8 @@ public class PlayerController : NetworkBehaviour
     private LineRenderer lineRenderer;
     private int layerMask;
 
-
-
+    [SerializeField]
+    private RaceManager raceManager;
 
     // Start is called before the first frame update
     void Start()
@@ -45,7 +45,7 @@ public class PlayerController : NetworkBehaviour
         }
 
         // 子メッシュを無視するレイヤーマスクを作成（例えば子メッシュがレイヤー8にあるとする
-        layerMask = 1 << 8;
+        layerMask = (1 << 8) | (1 << 9);
         layerMask = ~layerMask; // レイヤー8を除外する
     }
 
@@ -109,11 +109,9 @@ public class PlayerController : NetworkBehaviour
     {
         if (isWired)
         {
-
             // プレイヤーを目標地点に引く
             Vector3 forceDirection = (targetPosition - transform.position).normalized;
             rb.AddForce(forceDirection * wireSpeed, ForceMode.Acceleration);
-            Debug.Log(forceDirection * wireSpeed);
         }
     }
 
@@ -133,6 +131,16 @@ public class PlayerController : NetworkBehaviour
         {
             animator.SetBool("InAir", true);
             isGround = false;
+        }
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        string layerName = LayerMask.LayerToName(other.gameObject.layer);
+
+        if (layerName == "Goal")
+        {
+            raceManager.Goal("player", "00");
         }
     }
 }
