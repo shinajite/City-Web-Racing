@@ -152,7 +152,7 @@ public class PlayerController : NetworkBehaviour
 
             // Œo‰ßŠÔ‚ğ•b”‚É•ÏŠ·
             float seconds = (float)elapsedTime.TotalSeconds;
-            MessageBroker.Default.Publish(new GoalMsg { playerName = "Player" + NetworkObject.NetworkObjectId, goalTime = seconds });
+            MessageBroker.Default.Publish(new GoalMsg { playerName = "Player" + NetworkObject.NetworkObjectId, goalTime = now });
         }
     }
 }

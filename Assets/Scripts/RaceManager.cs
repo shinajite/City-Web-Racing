@@ -4,9 +4,47 @@ using UnityEngine;
 using UniRx;
 using Unity.Netcode;
 using System;
+/*
+public class MyEventMessage : INetworkSerializable
+{
+    public int exampleData;
+
+    // INetworkSerializable の実装
+    public void NetworkSerialize(NetworkSerializer serializer)
+    {
+        serializer.Serialize(ref exampleData);
+    }
+}
+*/
 
 public class RaceManager : NetworkBehaviour
 {
+    /*
+    public void TriggerEventOnAllClients()
+    {
+        // サーバーでのみ実行されることを確認
+        if (IsServer)
+        {
+            var message = new MyEventMessage { exampleData = 123 };
+
+            // 全クライアントにメッセージを送信
+            SendEventToAllClients(message);
+        }
+    }
+
+    private void SendEventToAllClients(MyEventMessage message)
+    {
+        // RPCを使用して全クライアントにメッセージを送信
+        SendEventClientRpc(message);
+    }
+
+    [ClientRpc]
+    private void SendEventClientRpc(MyEventMessage message, ClientRpcParams rpcParams = default)
+    {
+        // ここでクライアント側のイベント処理を実行します
+        Debug.Log($"Event received with data: {message.exampleData}");
+    }
+    /*
     // ネットワーク上に一つしか存在しないように
     public static RaceManager Instance { get; private set; } // staticで宣言することでclassにおいて同一の値となる
 
@@ -278,11 +316,80 @@ void Update()
         startTime.Value = seconds;
     }
     */
+
+    // レース開始時間を保有する変数
+    public NetworkVariable<DateTime> startTime = new NetworkVariable<DateTime>(DateTime.Now);
+
+
+    void Start()
+    {
+        // ゴールイベントの登録
+        MessageBroker.Default.Receive<GoalMsg>()
+            .Subscribe(x => GoalRace(x.playerName, x.goalTime))
+            .AddTo(this);
+
+        // startTimeが変わったとき
+        startTime.OnValueChanged += (DateTime oldParam, DateTime newParam) =>
+        {
+            // TimeSpan startTimeSpan = TimeSpan.FromSeconds(newParam);
+            StartCoroutine(Countdown(newParam));
+            MessageBroker.Default.Publish(new AddBasicLogMsg { message = "Race will start. Please wait" });
+        };
+    }
+
+    private IEnumerator Countdown(DateTime targetTime)
+    {
+        //DateTime targetTime = new DateTime(1970, 1, 1).Add(startTimeSpan);
+        DateTime countdownStart = targetTime.AddSeconds(-5); // 5秒前からカウントダウン開始
+
+        while (DateTime.Now < countdownStart)
+        {
+            yield return null; // 次のフレームまで待つ
+        }
+
+        int countdownSeconds = 5; // カウントダウン時間（秒）
+        while (countdownSeconds > 0)
+        {
+            MessageBroker.Default.Publish(new SetBigBasicLogMsg { message = countdownSeconds.ToString(), lifeTime = 100 }); ;
+            yield return new WaitForSeconds(1.0f);
+            countdownSeconds--;
+        }
+        MessageBroker.Default.Publish(new SetBigBasicLogMsg { message = "Start!" });
+    }
+
+
+    public void StartRace()
+    {
+        // 現在の時刻に10秒を加える
+        DateTime nowPlus10Seconds = DateTime.Now.AddSeconds(10);
+        /*
+        Debug.Log(nowPlus10Seconds.ToString());
+
+        // Unix エポックからの経過時間を取得
+        TimeSpan elapsedTime = nowPlus10Seconds - new DateTime(1970, 1, 1);
+
+        // 経過時間を秒数に変換
+        float seconds = (float)elapsedTime.TotalSeconds;*/
+        startTime.Value = nowPlus10Seconds;
+    }
+
+    public void GoalRace(string name, DateTime time)
+    {
+        Debug.Log(startTime.Value);
+        /*
+        Debug.Log(time);
+        DateTime startDateTime = DateTimeOffset.FromUnixTimeSeconds((long)startTime.Value).DateTime;
+        DateTime goalDateTime = DateTimeOffset.FromUnixTimeSeconds((long)time).DateTime;
+
+        double secondsDifference = (goalDateTime - startDateTime).TotalSeconds;
+        MessageBroker.Default.Publish(new AddBasicLogMsg { message = name + " goaled time:" + secondsDifference.ToString() });*/
+    }
+
 }
 
 // 送信するメッセージの型
 public class GoalMsg
 {
     public string playerName { get; set; }
-    public float goalTime { get; set; }
+    public DateTime goalTime { get; set; }
 }
