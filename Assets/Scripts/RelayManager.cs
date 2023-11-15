@@ -7,7 +7,7 @@ using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using TMPro;
 
-public class RelayManager: MonoBehaviour
+public class RelayTest : MonoBehaviour
 {
     [SerializeField] TMP_InputField joinCodeInput;
     private async void Start()

@@ -145,6 +145,7 @@ public class PlayerController : NetworkBehaviour
         {
             // 現在の時刻を取得
             DateTime now = DateTime.Now;
+            Debug.Log(now);
 
             // Unix エポックからの経過時間を取得
             TimeSpan elapsedTime = now - new DateTime(1970, 1, 1);
