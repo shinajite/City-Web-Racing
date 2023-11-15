@@ -72,11 +72,11 @@ public class RaceManager : NetworkBehaviour
     void Update()
     {
         Debug.Log("startMethod!");
-        /*
-        if (IsClient)
+        if (IsHost)
         {
-            SendCurrentTimeToClient(NetworkManager.Singleton.LocalClientId);
-        }*/
+            Debug.Log("I'm No.1 Hest!");
+            //SendCurrentTimeToClient(NetworkManager.Singleton.LocalClientId);
+        }
     }
         /*
     void Update()
