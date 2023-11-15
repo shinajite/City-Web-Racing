@@ -57,20 +57,24 @@ public class RaceManager : NetworkBehaviour
         Debug.Log("Received server time: " + time.ToString());
         MessageBroker.Default.Publish(new AddBasicLogMsg { message = "Received server time: " + time.ToString() });
     }
+    public void help()
+    {
+
+        foreach (var client in NetworkManager.Singleton.ConnectedClients)
+        {
+            ulong clientId = client.Key;
+            SendCurrentTimeToClient(clientId);
+            Debug.Log("Connected client ID: " + clientId);
+        }
+    }
+        /*
     void Update()
     {
 
         Debug.Log("he!");
         Debug.Log(NetworkManager.Singleton.LocalClientId);
 
-        foreach (var client in NetworkManager.Singleton.ConnectedClients)
-        {
-            ulong clientId = client.Key;
-        SendCurrentTimeToClient(clientId);
-            Debug.Log("Connected client ID: " + clientId);
-        }
         //SendDateTimeToClients();
-        /*
         Debug.Log("startMethod!");
         Debug.Log(getHostDateTimeNow());
         if (IsHost)
@@ -78,7 +82,7 @@ public class RaceManager : NetworkBehaviour
             Debug.Log("I'm No.1 Hest!");
             //SendCurrentTimeToClient(NetworkManager.Singleton.LocalClientId);
         }*/
-    }
+    //}
 
     /*
     private DateTime getHostDateTimeNow()

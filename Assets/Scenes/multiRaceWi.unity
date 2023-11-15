@@ -209,7 +209,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 473947332}
         m_TargetAssemblyTypeName: RaceManager, Assembly-CSharp
-        m_MethodName: StartRace
+        m_MethodName: help
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
