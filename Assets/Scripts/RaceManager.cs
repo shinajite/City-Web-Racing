@@ -32,18 +32,6 @@ public class RaceManager : NetworkBehaviour
             //SendTimeToAllClientsServerRpc(serverTime);
         }
     }
-    /*
-    [ServerRpc(RequireOwnership = false)]
-    private void SendTimeToAllClientsServerRpc(DateTime time)
-    {
-        Debug.Log("sendCliend!");
-        SendTimeToClientClientRpc(time);
-    }
-    [ClientRpc]
-    private void SendTimeToClientClientRpc(DateTime time)
-    {
-        Debug.Log("Received server time: " + time.ToString());
-    }*/
     
     [ServerRpc(RequireOwnership = false)]
     private void SendTimeToClientServerRpc(DateTime time, ulong clientId)
@@ -69,6 +57,29 @@ public class RaceManager : NetworkBehaviour
         Debug.Log("Received server time: " + time.ToString());
         MessageBroker.Default.Publish(new AddBasicLogMsg { message = "Received server time: " + time.ToString() });
     }
+    void Update()
+    {
+
+        Debug.Log("he!");
+        Debug.Log(NetworkManager.Singleton.LocalClientId);
+
+        foreach (var client in NetworkManager.Singleton.ConnectedClients)
+        {
+            ulong clientId = client.Key;
+        SendCurrentTimeToClient(clientId);
+            Debug.Log("Connected client ID: " + clientId);
+        }
+        //SendDateTimeToClients();
+        /*
+        Debug.Log("startMethod!");
+        Debug.Log(getHostDateTimeNow());
+        if (IsHost)
+        {
+            Debug.Log("I'm No.1 Hest!");
+            //SendCurrentTimeToClient(NetworkManager.Singleton.LocalClientId);
+        }*/
+    }
+
     /*
     private DateTime getHostDateTimeNow()
     {
@@ -95,32 +106,28 @@ public class RaceManager : NetworkBehaviour
             SendDateTimeToClientsClientRpc(currentDateTime);
         }
     }*/
-    void Update()
+
+    /*
+    [ServerRpc(RequireOwnership = false)]
+    private void SendTimeToAllClientsServerRpc(DateTime time)
     {
-
-        Debug.Log("he!");
-        Debug.Log(NetworkManager.Singleton.LocalClientId);
-
-        SendCurrentTimeToClient(NetworkManager.Singleton.LocalClientId);
-        //SendDateTimeToClients();
-        /*
-        Debug.Log("startMethod!");
-        Debug.Log(getHostDateTimeNow());
-        if (IsHost)
-        {
-            Debug.Log("I'm No.1 Hest!");
-            //SendCurrentTimeToClient(NetworkManager.Singleton.LocalClientId);
-        }*/
+        Debug.Log("sendCliend!");
+        SendTimeToClientClientRpc(time);
     }
-        /*
-    void Update()
+    [ClientRpc]
+    private void SendTimeToClientClientRpc(DateTime time)
     {
-        // SendCurrentTimeToClient(NetworkManager.Singleton.LocalClientId);
-        if (NetworkManager.Singleton.IsClient || NetworkManager.Singleton.IsServer)
-        {
+        Debug.Log("Received server time: " + time.ToString());
+    }*/
+    /*
+void Update()
+{
+    // SendCurrentTimeToClient(NetworkManager.Singleton.LocalClientId);
+    if (NetworkManager.Singleton.IsClient || NetworkManager.Singleton.IsServer)
+    {
 //            NetworkTime serverTime = NetworkManager.Singleton.ServerTime;
-    }
-        }*/
+}
+    }*/
 
     /*
    
