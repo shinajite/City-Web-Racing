@@ -28,10 +28,22 @@ public class RaceManager : NetworkBehaviour
         {
             Debug.Log("serverMethod!");
             DateTime serverTime = DateTime.Now;
-            SendTimeToClientServerRpc(serverTime, clientId);
+            //SendTimeToClientServerRpc(serverTime, clientId);
+            SendTimeToAllClientsServerRpc(serverTime);
         }
     }
 
+    [ServerRpc(RequireOwnership = false)]
+    private void SendTimeToAllClientsServerRpc(DateTime time)
+    {
+        SendTimeToClientClientRpc(time);
+    }
+    [ClientRpc]
+    private void SendTimeToClientClientRpc(DateTime time)
+    {
+        Debug.Log("Received server time: " + time.ToString());
+    }
+    /*
     [ServerRpc(RequireOwnership = false)]
     private void SendTimeToClientServerRpc(DateTime time, ulong clientId)
     {
@@ -47,7 +59,7 @@ public class RaceManager : NetworkBehaviour
         TargetReceiveTimeClientRpc(time, rpcParams);
         Debug.Log(time);
         Debug.Log(clientId);
-    }
+    }*/
 
     [ClientRpc]
     public void TargetReceiveTimeClientRpc(DateTime time, ClientRpcParams rpcParams = default)
