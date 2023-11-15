@@ -97,6 +97,10 @@ public class RaceManager : NetworkBehaviour
     }*/
     void Update()
     {
+
+        Debug.Log("he!");
+        Debug.Log(NetworkManager.Singleton.LocalClientId);
+
         SendCurrentTimeToClient(NetworkManager.Singleton.LocalClientId);
         //SendDateTimeToClients();
         /*
