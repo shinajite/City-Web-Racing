@@ -54,6 +54,7 @@ public class RaceManager : NetworkBehaviour
     {
         Debug.Log(time);
         Debug.Log("Received server time: " + time.ToString());
+        MessageBroker.Default.Publish(new AddBasicLogMsg { message = "Received server time: " + time.ToString() });
     }
     void Update()
     {
