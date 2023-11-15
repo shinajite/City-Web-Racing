@@ -7,7 +7,21 @@ using System;
 
 public class RaceManager : NetworkBehaviour
 {
+    // ネットワーク上に一つしか存在しないように
+    public static RaceManager Instance { get; private set; } // staticで宣言することでclassにおいて同一の値となる
 
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            Instance = this;
+            DontDestroyOnLoad(this.gameObject); // シーン遷移時に破棄されないようにする
+        }
+    }
     public void SendCurrentTimeToClient(ulong clientId)
     {
         if (IsServer) // サーバー側のチェックを追加
@@ -60,21 +74,7 @@ public class RaceManager : NetworkBehaviour
         }*/
 
     /*
-    // ネットワーク上に一つしか存在しないように
-    public static RaceManager Instance { get; private set; } // staticで宣言することでclassにおいて同一の値となる
-
-    private void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(this.gameObject);
-        }
-        else
-        {
-            Instance = this;
-            DontDestroyOnLoad(this.gameObject); // シーン遷移時に破棄されないようにする
-        }
-    }
+   
     /*
     // レース開始時間を保有する変数
     public NetworkVariable<DateTime> startTime = new NetworkVariable<DateTime>(DateTime.Now);
