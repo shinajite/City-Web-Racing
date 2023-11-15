@@ -21,18 +21,18 @@ public class RaceManager : NetworkBehaviour
             Instance = this;
             DontDestroyOnLoad(this.gameObject); // シーン遷移時に破棄されないようにする
         }
-    }/*
+    }
     public void SendCurrentTimeToClient(ulong clientId)
     {
         if (IsServer) // サーバー側のチェックを追加
         {
             Debug.Log("serverMethod!");
             DateTime serverTime = DateTime.Now;
-            //SendTimeToClientServerRpc(serverTime, clientId);
-            SendTimeToAllClientsServerRpc(serverTime);
+            SendTimeToClientServerRpc(serverTime, clientId);
+            //SendTimeToAllClientsServerRpc(serverTime);
         }
     }
-
+    /*
     [ServerRpc(RequireOwnership = false)]
     private void SendTimeToAllClientsServerRpc(DateTime time)
     {
@@ -44,7 +44,7 @@ public class RaceManager : NetworkBehaviour
     {
         Debug.Log("Received server time: " + time.ToString());
     }*/
-    /*
+    
     [ServerRpc(RequireOwnership = false)]
     private void SendTimeToClientServerRpc(DateTime time, ulong clientId)
     {
@@ -60,30 +60,53 @@ public class RaceManager : NetworkBehaviour
         TargetReceiveTimeClientRpc(time, rpcParams);
         Debug.Log(time);
         Debug.Log(clientId);
-    }*/
-    /*
+    }
+    
     [ClientRpc]
     public void TargetReceiveTimeClientRpc(DateTime time, ClientRpcParams rpcParams = default)
     {
         Debug.Log(time);
         Debug.Log("Received server time: " + time.ToString());
         MessageBroker.Default.Publish(new AddBasicLogMsg { message = "Received server time: " + time.ToString() });
-    }*/
-
+    }
+    /*
     private DateTime getHostDateTimeNow()
     {
-        return DateTime.Now;
+        if (IsHost)
+        {
+            return DateTime.Now;
+        }
+    }
+    */
+    /*
+    // クライアントに日時を送信するRPC
+    [ClientRpc]
+    void SendDateTimeToClientsClientRpc(string dateTime, ClientRpcParams rpcParams = default)
+    {
+        Debug.Log("Received DateTime from Host: " + dateTime);
     }
 
+    // ホストが現在の日時を取得し、クライアントに送信するメソッド
+    public void SendDateTimeToClients()
+    {
+        if (IsServer) // ホストかどうか確認
+        {
+            string currentDateTime = System.DateTime.Now.ToString();
+            SendDateTimeToClientsClientRpc(currentDateTime);
+        }
+    }*/
     void Update()
     {
+        SendCurrentTimeToClient(NetworkManager.Singleton.LocalClientId);
+        //SendDateTimeToClients();
+        /*
         Debug.Log("startMethod!");
         Debug.Log(getHostDateTimeNow());
         if (IsHost)
         {
             Debug.Log("I'm No.1 Hest!");
             //SendCurrentTimeToClient(NetworkManager.Singleton.LocalClientId);
-        }
+        }*/
     }
         /*
     void Update()
