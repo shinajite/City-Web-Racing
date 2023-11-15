@@ -21,7 +21,7 @@ public class RaceManager : NetworkBehaviour
             Instance = this;
             DontDestroyOnLoad(this.gameObject); // シーン遷移時に破棄されないようにする
         }
-    }
+    }/*
     public void SendCurrentTimeToClient(ulong clientId)
     {
         if (IsServer) // サーバー側のチェックを追加
@@ -36,13 +36,14 @@ public class RaceManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     private void SendTimeToAllClientsServerRpc(DateTime time)
     {
+        Debug.Log("sendCliend!");
         SendTimeToClientClientRpc(time);
     }
     [ClientRpc]
     private void SendTimeToClientClientRpc(DateTime time)
     {
         Debug.Log("Received server time: " + time.ToString());
-    }
+    }*/
     /*
     [ServerRpc(RequireOwnership = false)]
     private void SendTimeToClientServerRpc(DateTime time, ulong clientId)
@@ -60,21 +61,22 @@ public class RaceManager : NetworkBehaviour
         Debug.Log(time);
         Debug.Log(clientId);
     }*/
-
+    /*
     [ClientRpc]
     public void TargetReceiveTimeClientRpc(DateTime time, ClientRpcParams rpcParams = default)
     {
         Debug.Log(time);
         Debug.Log("Received server time: " + time.ToString());
         MessageBroker.Default.Publish(new AddBasicLogMsg { message = "Received server time: " + time.ToString() });
-    }
+    }*/
     void Update()
     {
         Debug.Log("startMethod!");
+        /*
         if (IsClient)
         {
             SendCurrentTimeToClient(NetworkManager.Singleton.LocalClientId);
-        }
+        }*/
     }
         /*
     void Update()
