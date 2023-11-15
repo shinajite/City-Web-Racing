@@ -69,9 +69,16 @@ public class RaceManager : NetworkBehaviour
         Debug.Log("Received server time: " + time.ToString());
         MessageBroker.Default.Publish(new AddBasicLogMsg { message = "Received server time: " + time.ToString() });
     }*/
+
+    private DateTime getHostDateTimeNow()
+    {
+        return DateTime.Now;
+    }
+
     void Update()
     {
         Debug.Log("startMethod!");
+        Debug.Log(getHostDateTimeNow());
         if (IsHost)
         {
             Debug.Log("I'm No.1 Hest!");
