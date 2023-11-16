@@ -144,14 +144,16 @@ public class PlayerController : NetworkBehaviour
         if (layerName == "Goal")
         {
             // 現在の時刻を取得
-            DateTime now = DateTime.Now;
-            Debug.Log(now);
+            DateTime now = DateTime.UtcNow;
 
             // Unix エポックからの経過時間を取得
-            TimeSpan elapsedTime = now - new DateTime(1970, 1, 1);
+            float unixTimestamp = (float)(now.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
 
-            // 経過時間を秒数に変換
-            float seconds = (float)elapsedTime.TotalSeconds;
+            DateTime dateTime = new DateTime(1970, 1, 1).AddSeconds(unixTimestamp);
+
+            Debug.Log(dateTime);
+
+
             MessageBroker.Default.Publish(new GoalMsg { playerName = "Player" + NetworkObject.NetworkObjectId, goalTime = now });
         }
     }

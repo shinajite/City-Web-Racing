@@ -318,21 +318,31 @@ void Update()
     */
 
     // レース開始時間を保有する変数
-    public NetworkVariable<DateTime> startTime = new NetworkVariable<DateTime>(DateTime.Now);
+    public NetworkVariable<double> startTime = new NetworkVariable<double>(0);
+
+    public DateTime startDateTime;
 
 
     void Start()
     {
+        DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
         // ゴールイベントの登録
         MessageBroker.Default.Receive<GoalMsg>()
             .Subscribe(x => GoalRace(x.playerName, x.goalTime))
             .AddTo(this);
 
         // startTimeが変わったとき
-        startTime.OnValueChanged += (DateTime oldParam, DateTime newParam) =>
+        startTime.OnValueChanged += (double oldParam, double newParam) =>
         {
-            // TimeSpan startTimeSpan = TimeSpan.FromSeconds(newParam);
-            StartCoroutine(Countdown(newParam));
+            Debug.Log(oldParam);
+            Debug.Log(newParam);
+            // UnixタイムスタンプをDateTimeに変換
+            DateTime dateTime = epoch.AddSeconds(newParam);
+
+
+            Debug.Log("changeStart:" + dateTime);
+            StartCoroutine(Countdown(dateTime));
             MessageBroker.Default.Publish(new AddBasicLogMsg { message = "Race will start. Please wait" });
         };
     }
@@ -342,10 +352,15 @@ void Update()
         //DateTime targetTime = new DateTime(1970, 1, 1).Add(startTimeSpan);
         DateTime countdownStart = targetTime.AddSeconds(-5); // 5秒前からカウントダウン開始
 
-        while (DateTime.Now < countdownStart)
+        Debug.Log("timerStartAt:"+ countdownStart);
+
+        while (DateTime.UtcNow < countdownStart)
         {
             yield return null; // 次のフレームまで待つ
         }
+
+        Debug.Log(countdownStart);
+        Debug.Log(DateTime.UtcNow);
 
         int countdownSeconds = 5; // カウントダウン時間（秒）
         while (countdownSeconds > 0)
@@ -360,29 +375,48 @@ void Update()
 
     public void StartRace()
     {
-        // 現在の時刻に10秒を加える
-        DateTime nowPlus10Seconds = DateTime.Now.AddSeconds(10);
+        DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+        // startDateTimeをUTCで取得
+        DateTime startDateTime = DateTime.UtcNow.AddSeconds(20);
+        TimeSpan timeSpan = startDateTime - epoch;
+        double unixTimestamp = (double)timeSpan.TotalSeconds;
+
+        // unixTimestampを保存する
+        double savedUnixTimestamp = unixTimestamp;
+
+        // UnixタイムスタンプからDateTimeに戻す場合
+        DateTime dateTime = epoch.AddSeconds(savedUnixTimestamp);
+        Debug.Log(startDateTime);
+        Debug.Log(dateTime);
+        startTime.Value = savedUnixTimestamp;
+
+
         /*
-        Debug.Log(nowPlus10Seconds.ToString());
+        float unixTimestamp = (float)(nowPlus10Seconds.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
 
-        // Unix エポックからの経過時間を取得
-        TimeSpan elapsedTime = nowPlus10Seconds - new DateTime(1970, 1, 1);
 
-        // 経過時間を秒数に変換
-        float seconds = (float)elapsedTime.TotalSeconds;*/
-        startTime.Value = nowPlus10Seconds;
+        // UnixタイムスタンプをDateTimeに変換
+        DateTime dateTime = new DateTime(1970, 1, 1).AddSeconds(unixTimestamp);
+
+        Debug.Log(dateTime);
+
+
+        startTime.Value = unixTimestamp;
+        */
     }
 
     public void GoalRace(string name, DateTime time)
     {
-        Debug.Log(startTime.Value);
-        /*
-        Debug.Log(time);
-        DateTime startDateTime = DateTimeOffset.FromUnixTimeSeconds((long)startTime.Value).DateTime;
-        DateTime goalDateTime = DateTimeOffset.FromUnixTimeSeconds((long)time).DateTime;
+        DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
-        double secondsDifference = (goalDateTime - startDateTime).TotalSeconds;
-        MessageBroker.Default.Publish(new AddBasicLogMsg { message = name + " goaled time:" + secondsDifference.ToString() });*/
+        //DateTime goalDateTime = epoch.AddSeconds(time);
+        DateTime startDateTime = epoch.AddSeconds(startTime.Value);
+        Debug.Log(startDateTime);
+        //Debug.Log(goalDateTime);
+
+        double secondsDifference = (time - startDateTime).TotalSeconds;
+        MessageBroker.Default.Publish(new AddBasicLogMsg { message = name + " goaled time:" + secondsDifference.ToString() });
     }
 
 }
