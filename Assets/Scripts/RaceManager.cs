@@ -37,9 +37,11 @@ public class RaceManager : NetworkBehaviour
     }
 
     // レース開始時間を保有する変数
-    public NetworkVariable<int> AmmoCount = new NetworkVariable<int>(default,
+    private NetworkVariable<int> AmmoCount = new NetworkVariable<int>(default,
         NetworkVariableReadPermission.Owner, NetworkVariableWritePermission.Owner);
-    public NetworkVariable<double> startTime = new NetworkVariable<double>(default,
+    public int previewInt;
+
+    private NetworkVariable<double> startTime = new NetworkVariable<double>(default,
             NetworkVariableReadPermission.Everyone,  // サーバー（またはホスト）のみが書き込み可能
             NetworkVariableWritePermission.Owner    // すべてのクライアントが読み取り可能
                                                     // 0.1秒ごとに変更を送信,
@@ -68,6 +70,11 @@ public class RaceManager : NetworkBehaviour
             Debug.Log("changeStart:" + dateTime);
             StartCoroutine(Countdown(dateTime));
             MessageBroker.Default.Publish(new AddBasicLogMsg { message = "Race will start. Please wait" });
+        };
+
+        AmmoCount.OnValueChanged += (int oldParam, int newParam) =>
+        {
+            previewInt = newParam;
         };
     }
 
