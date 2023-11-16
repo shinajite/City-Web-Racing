@@ -338,10 +338,10 @@ void Update()
 
     public DateTime startDateTime;
 
+    DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
     void Start()
     {
-        DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         // ƒS[ƒ‹ƒCƒxƒ“ƒg‚Ì“o˜^
         MessageBroker.Default.Receive<GoalMsg>()
@@ -391,10 +391,8 @@ void Update()
 
     public void StartRace()
     {
-        DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-
         // startDateTime‚ğUTC‚Åæ“¾
-        DateTime startDateTime = DateTime.UtcNow.AddSeconds(20);
+        DateTime startDateTime = DateTime.UtcNow.AddSeconds(7);
         TimeSpan timeSpan = startDateTime - epoch;
         double unixTimestamp = (double)timeSpan.TotalSeconds;
 
@@ -424,8 +422,6 @@ void Update()
 
     public void GoalRace(string name, DateTime time)
     {
-        DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-
         //DateTime goalDateTime = epoch.AddSeconds(time);
         DateTime startDateTime = epoch.AddSeconds(startTime.Value);
         Debug.Log(startDateTime);
