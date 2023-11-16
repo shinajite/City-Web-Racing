@@ -26,6 +26,13 @@ public class PlayerController : NetworkBehaviour
     [SerializeField]
     private RaceManager raceManager;
 
+    private NetworkVariable<int> networkData = new NetworkVariable<int>(
+        0,                                          // 初期値
+        NetworkVariableReadPermission.Everyone,     // 読み取り権限
+        NetworkVariableWritePermission.Owner        // 書き込み権限
+        );
+    public int previewInt;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -40,6 +47,9 @@ public class PlayerController : NetworkBehaviour
         {
             // このプレイヤーのカメラをアクティブにする
             playerCamera.enabled = true;
+
+            // プレイヤー名をuiに設定
+            MessageBroker.Default.Publish(new SetPlayerNameMsg { name = "player" + NetworkObject.NetworkObjectId });
         }
         else
         {
@@ -50,6 +60,11 @@ public class PlayerController : NetworkBehaviour
         // 子メッシュを無視するレイヤーマスクを作成（例えば子メッシュがレイヤー8にあるとする
         layerMask = (1 << 8) | (1 << 9);
         layerMask = ~layerMask; // レイヤー8を除外する
+
+        networkData.OnValueChanged += (int oldParam, int newParam) =>
+        {
+            previewInt = newParam;
+        };
     }
 
     // Update is called once per frame
@@ -69,6 +84,15 @@ public class PlayerController : NetworkBehaviour
         {
             animator.SetTrigger("Jamp");
             rb.AddForce(new Vector3(0, jumpForce, 0), ForceMode.Acceleration);
+
+            if (!IsOwner)
+            {
+                return;
+            }
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                networkData.Value += 1;
+            }
         }
 
         // ワイヤー発射（マウス左クリック）

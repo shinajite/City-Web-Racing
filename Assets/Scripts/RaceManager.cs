@@ -19,7 +19,7 @@ public class MyEventMessage : INetworkSerializable
 
 public class RaceManager : NetworkBehaviour
 {
-
+    
     // ネットワーク上に一つしか存在しないように
     public static RaceManager Instance { get; private set; } // staticで宣言することでclassにおいて同一の値となる
 
@@ -37,10 +37,14 @@ public class RaceManager : NetworkBehaviour
     }
 
     // レース開始時間を保有する変数
-    private NetworkVariable<int> AmmoCount = new NetworkVariable<int>(default,
-        NetworkVariableReadPermission.Owner, NetworkVariableWritePermission.Owner);
-    public int previewInt;
+    public int previewInt = 0;
 
+    private NetworkVariable<int> networkData = new NetworkVariable<int>(
+        0,                                          // 初期値
+        NetworkVariableReadPermission.Everyone,     // 読み取り権限
+        NetworkVariableWritePermission.Owner        // 書き込み権限
+        );
+    /*
     private NetworkVariable<double> startTime = new NetworkVariable<double>(default,
             NetworkVariableReadPermission.Everyone,  // サーバー（またはホスト）のみが書き込み可能
             NetworkVariableWritePermission.Owner    // すべてのクライアントが読み取り可能
@@ -49,10 +53,10 @@ public class RaceManager : NetworkBehaviour
 
 
     DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-
+    */
     void Start()
     {
-
+        /*
         // ゴールイベントの登録
         MessageBroker.Default.Receive<GoalMsg>()
             .Subscribe(x => GoalRace(x.playerName, x.goalTime))
@@ -71,19 +75,29 @@ public class RaceManager : NetworkBehaviour
             StartCoroutine(Countdown(dateTime));
             MessageBroker.Default.Publish(new AddBasicLogMsg { message = "Race will start. Please wait" });
         };
-
-        AmmoCount.OnValueChanged += (int oldParam, int newParam) =>
+        */
+        MessageBroker.Default.Receive<StartMsg>()
+            .Subscribe(x => StartRace())
+            .AddTo(this);
+        
+        networkData.OnValueChanged += (int oldParam, int newParam) =>
         {
             previewInt = newParam;
         };
     }
-
-    void Update()
+    /*
+    private void Update()
     {
-        Debug.Log(startTime.Value);
+        if (!IsOwner)
+        {
+            return;
+        }
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+        }
     }
 
-    private IEnumerator Countdown(DateTime targetTime)
+        private IEnumerator Countdown(DateTime targetTime)
     {
         //DateTime targetTime = new DateTime(1970, 1, 1).Add(startTimeSpan);
         DateTime countdownStart = targetTime.AddSeconds(-5); // 5秒前からカウントダウン開始
@@ -107,10 +121,12 @@ public class RaceManager : NetworkBehaviour
         }
         MessageBroker.Default.Publish(new SetBigBasicLogMsg { message = "Start!" });
     }
-
+    */
 
     public void StartRace()
     {
+        previewInt += 1;
+        /*
         // startDateTimeをUTCで取得
         DateTime startDateTime = DateTime.UtcNow.AddSeconds(7);
         TimeSpan timeSpan = startDateTime - epoch;
@@ -125,7 +141,7 @@ public class RaceManager : NetworkBehaviour
         Debug.Log(dateTime);
         startTime.Value = savedUnixTimestamp;
 
-        AmmoCount.Value = AmmoCount.Value + 1;
+//        AmmoCount.Value = AmmoCount.Value + 1;
 
 
         /*
@@ -141,7 +157,7 @@ public class RaceManager : NetworkBehaviour
         startTime.Value = unixTimestamp;
         */
     }
-
+    /*
     public void GoalRace(string name, DateTime time)
     {
         //DateTime goalDateTime = epoch.AddSeconds(time);
@@ -151,7 +167,7 @@ public class RaceManager : NetworkBehaviour
 
         double secondsDifference = (time - startDateTime).TotalSeconds;
         MessageBroker.Default.Publish(new AddBasicLogMsg { message = name + " goaled time:" + secondsDifference.ToString(), lifeTime=10f });
-    }
+    }*/
 
 }
 
@@ -160,4 +176,10 @@ public class GoalMsg
 {
     public string playerName { get; set; }
     public DateTime goalTime { get; set; }
+}
+
+
+// 送信するメッセージの型
+public class StartMsg
+{
 }
