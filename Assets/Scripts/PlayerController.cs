@@ -235,11 +235,8 @@ public class PlayerController : NetworkBehaviour
 
         if (layerName == "Goal")
         {
-            if(IsOwner)
-            {
-                MessageBroker.Default.Publish(new GoalMsg { playerName = "player" + NetworkObject.NetworkObjectId });
-                MessageBroker.Default.Publish(new SetBigBasicLogMsg { message = "Finish!", lifeTime = 1.5f });
-            }
+            MessageBroker.Default.Publish(new GoalMsg { playerName = "player" + NetworkObject.NetworkObjectId });
+            MessageBroker.Default.Publish(new SetBigBasicLogMsg { message = "Finish!", lifeTime = 1.5f });
         }
     }
 
