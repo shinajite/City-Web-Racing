@@ -43,6 +43,6 @@ public class AddBasicLogMsg
     public AddBasicLogMsg()
     {
         // デフォルト値を設定
-        lifeTime = 1f;
+        lifeTime = 5f;
     }
 }

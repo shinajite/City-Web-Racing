@@ -23,6 +23,7 @@ public class PlayerController : NetworkBehaviour
     private LineRenderer lineRenderer;
     private int layerMask;
 
+
     [SerializeField]
     private RaceManager raceManager;
 
@@ -65,6 +66,68 @@ public class PlayerController : NetworkBehaviour
         {
             previewInt = newParam;
         };
+
+
+        MessageBroker.Default.Receive<StartNotificationMsg>()
+            .Subscribe(x =>
+            {
+                if (IsOwner)
+                {
+                    StartCoroutine(Countdown(x.startTime));
+                    MessageBroker.Default.Publish(new AddBasicLogMsg { message = "Race will start. Please wait" });
+                    GoToStart();
+                }
+
+            })
+            .AddTo(this);
+
+        MessageBroker.Default.Receive<GoalNotificationMsg>()
+            .Subscribe(x =>
+            {
+                if (IsOwner)
+                {
+
+                    // 2つのDateTimeの差を計算します
+                    TimeSpan difference = x.goalTime - x.startTime;
+
+                    // 結果を出力します
+                    int hours = difference.Hours;
+                    int minutes = difference.Minutes;
+                    int seconds = difference.Seconds;
+                    int milliseconds = difference.Milliseconds;
+
+                    MessageBroker.Default.Publish(new AddBasicLogMsg { message = x.playerName + " goaled!" }); ;
+                    MessageBroker.Default.Publish(new AddBasicLogMsg { 
+                        message = "time:" + (hours * 60 + minutes) + "m" + seconds + "." + milliseconds 
+                    });
+                }
+
+            })
+            .AddTo(this);
+    }
+
+
+    private IEnumerator Countdown(DateTime targetTime)
+    {
+        //DateTime targetTime = new DateTime(1970, 1, 1).Add(startTimeSpan);
+        DateTime countdownStart = targetTime.AddSeconds(-5); // 5秒前からカウントダウン開始
+
+        Debug.Log("timerStartAt:" + countdownStart);
+
+        while (DateTime.UtcNow < countdownStart)
+        {
+            yield return null; // 次のフレームまで待つ
+        }
+
+
+        int countdownSeconds = 5; // カウントダウン時間（秒）
+        while (countdownSeconds > 0)
+        {
+            MessageBroker.Default.Publish(new SetBigBasicLogMsg { message = countdownSeconds.ToString(), lifeTime = 100 }); ;
+            yield return new WaitForSeconds(1.0f);
+            countdownSeconds--;
+        }
+        MessageBroker.Default.Publish(new SetBigBasicLogMsg { message = "Start!" });
     }
 
     // Update is called once per frame
@@ -94,9 +157,14 @@ public class PlayerController : NetworkBehaviour
                 networkData.Value += 1;
             }
         }
+        // ジャンプ処理
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            GoToStart();
+        }
 
-        // ワイヤー発射（マウス左クリック）
-        if (Input.GetMouseButtonDown(1))
+            // ワイヤー発射（マウス左クリック）
+            if (Input.GetMouseButtonDown(1))
         {
             Debug.Log("fire");
             Ray ray = playerCamera.ScreenPointToRay(Input.mousePosition);
@@ -167,18 +235,23 @@ public class PlayerController : NetworkBehaviour
 
         if (layerName == "Goal")
         {
-            // 現在の時刻を取得
-            DateTime now = DateTime.UtcNow;
-
-            // Unix エポックからの経過時間を取得
-            float unixTimestamp = (float)(now.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-
-            DateTime dateTime = new DateTime(1970, 1, 1).AddSeconds(unixTimestamp);
-
-            Debug.Log(dateTime);
-
-
-            MessageBroker.Default.Publish(new GoalMsg { playerName = "Player" + NetworkObject.NetworkObjectId, goalTime = now });
+            if(IsOwner)
+            {
+                MessageBroker.Default.Publish(new GoalMsg { playerName = "player" + NetworkObject.NetworkObjectId });
+                MessageBroker.Default.Publish(new SetBigBasicLogMsg { message = "Finish!", lifeTime = 1.5f });
+            }
         }
     }
+
+    void GoToStart()
+    {
+        this.transform.position = Vector3.zero;
+    }
+}
+
+
+// 送信するメッセージの型
+public class GoalMsg
+{
+    public string playerName { get; set; }
 }

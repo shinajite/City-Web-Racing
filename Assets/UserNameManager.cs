@@ -11,16 +11,15 @@ public class UserNameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        MessageBroker.Default.Receive<SetPlayerNameMsg>()
+            .Subscribe(x =>
+            { userNameText.text = x.name; })
+            .AddTo(this);
     }
 
     // Update is called once per frame
     void Update()
     {
-        MessageBroker.Default.Receive<SetPlayerNameMsg>()
-            .Subscribe(x =>
-            { userNameText.text = x.name; })
-            .AddTo(this);
     }
 }
 

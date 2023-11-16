@@ -6,9 +6,17 @@ using Unity.Services.Relay.Models;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using TMPro;
+using UniRx;
 
-public class RelayTest : MonoBehaviour
+public class RelayManager : MonoBehaviour
 {
+
+    [SerializeField]
+    private GameObject relayUIs;
+
+    [SerializeField]
+    private GameObject gameUIs;
+
     [SerializeField] TMP_InputField joinCodeInput;
     private async void Start()
     {
@@ -38,7 +46,11 @@ public class RelayTest : MonoBehaviour
 
             Debug.Log(joinCode);
             joinCodeInput.text = joinCode;
+
+            relayUIs.SetActive(false);
+            gameUIs.SetActive(true);
             NetworkManager.Singleton.StartHost();
+
         }
         catch (RelayServiceException e)
         {
@@ -66,7 +78,10 @@ public class RelayTest : MonoBehaviour
                 joinAllocation.HostConnectionData
                 );
 
+            relayUIs.SetActive(false);
+            gameUIs.SetActive(true);
             NetworkManager.Singleton.StartClient();
+
         }
         catch (RelayServiceException e)
         {

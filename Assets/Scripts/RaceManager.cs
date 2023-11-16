@@ -76,6 +76,7 @@ public class RaceManager : NetworkBehaviour
             MessageBroker.Default.Publish(new AddBasicLogMsg { message = "Race will start. Please wait" });
         };
         */
+        /*
         MessageBroker.Default.Receive<StartMsg>()
             .Subscribe(x => StartRace())
             .AddTo(this);
@@ -83,7 +84,7 @@ public class RaceManager : NetworkBehaviour
         networkData.OnValueChanged += (int oldParam, int newParam) =>
         {
             previewInt = newParam;
-        };
+        };*/
     }
     /*
     private void Update()
@@ -169,17 +170,4 @@ public class RaceManager : NetworkBehaviour
         MessageBroker.Default.Publish(new AddBasicLogMsg { message = name + " goaled time:" + secondsDifference.ToString(), lifeTime=10f });
     }*/
 
-}
-
-// 送信するメッセージの型
-public class GoalMsg
-{
-    public string playerName { get; set; }
-    public DateTime goalTime { get; set; }
-}
-
-
-// 送信するメッセージの型
-public class StartMsg
-{
 }

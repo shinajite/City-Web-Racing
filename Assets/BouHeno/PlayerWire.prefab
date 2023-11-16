@@ -82,7 +82,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ce63102fbebcfc418c988767643a1de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 15
+  speed: 25
   maxDistance: 300
   wireSpeed: 60
   jumpForce: 1500
@@ -90,6 +90,7 @@ MonoBehaviour:
   animator: {fileID: 230248326232808789}
   playerCamera: {fileID: 230248325512299213}
   raceManager: {fileID: 0}
+  previewInt: 0
 --- !u!114 &230248325191568138
 MonoBehaviour:
   m_ObjectHideFlags: 0
