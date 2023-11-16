@@ -19,6 +19,22 @@ public class MyEventMessage : INetworkSerializable
 
 public class RaceManager : NetworkBehaviour
 {
+
+    // ネットワーク上に一つしか存在しないように
+    public static RaceManager Instance { get; private set; } // staticで宣言することでclassにおいて同一の値となる
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            Instance = this;
+            DontDestroyOnLoad(this.gameObject); // シーン遷移時に破棄されないようにする
+        }
+    }
     /*
     public void TriggerEventOnAllClients()
     {
@@ -416,7 +432,7 @@ void Update()
         //Debug.Log(goalDateTime);
 
         double secondsDifference = (time - startDateTime).TotalSeconds;
-        MessageBroker.Default.Publish(new AddBasicLogMsg { message = name + " goaled time:" + secondsDifference.ToString() });
+        MessageBroker.Default.Publish(new AddBasicLogMsg { message = name + " goaled time:" + secondsDifference.ToString(), lifeTime=10f });
     }
 
 }
