@@ -82,9 +82,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ce63102fbebcfc418c988767643a1de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 25
+  speed: 1600
   maxDistance: 300
-  wireSpeed: 60
+  wireSpeed: 5500
   jumpForce: 1500
   rotationSpeed: 150
   animator: {fileID: 230248326232808789}
