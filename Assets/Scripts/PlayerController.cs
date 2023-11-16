@@ -138,7 +138,7 @@ public class PlayerController : NetworkBehaviour
         float moveHorizontal = Input.GetAxis("Horizontal");
         animator.SetFloat("moveSpeed", moveVertical);
         Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
-        movement = transform.TransformDirection(movement) * speed;
+        movement = transform.TransformDirection(movement) * speed * Time.deltaTime;
         rb.AddForce(movement, ForceMode.Acceleration);
 
 
@@ -206,7 +206,7 @@ public class PlayerController : NetworkBehaviour
         {
             // プレイヤーを目標地点に引く
             Vector3 forceDirection = (targetPosition - transform.position).normalized;
-            rb.AddForce(forceDirection * wireSpeed, ForceMode.Acceleration);
+            rb.AddForce(forceDirection * wireSpeed * Time.deltaTime, ForceMode.Acceleration);
         }
     }
 
