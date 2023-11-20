@@ -2,7 +2,7 @@
 ## About This
 henohenomoheji
 
-## Pla Game
+## Play Game
 ### 1. Download the release file
 url<br>
 ![addRepoImage](../readmeImages/2023-11-20 155939.png)
@@ -52,9 +52,9 @@ you can run and play game
 
 ## Multi Play
 ### 1. Link your unity relay project
-https://unity.com/ja/products/relay
+https://unity.com/ja/products/relay<br>
 https://docs.unity.com/ugs/en-us/manual/relay/manual/get-started<br>
-note: you must not install packages. only for link.
+note: you must not install packages. only for link.<br>
 note: we are not responsible for any charges incurred as a result of this
 
 ### 2. Open multi play scene
