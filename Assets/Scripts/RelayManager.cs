@@ -46,6 +46,7 @@ public class RelayManager : MonoBehaviour
 
             Debug.Log(joinCode);
             joinCodeInput.text = joinCode;
+            MessageBroker.Default.Publish(new SetJoinCodeMsg { code = joinCode }); ;
 
             relayUIs.SetActive(false);
             gameUIs.SetActive(true);
