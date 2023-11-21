@@ -888,10 +888,10 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 2
   windowsGamepadBackendHint: 0
-  cloudProjectId: 6b77a5a8-82b5-48a0-841c-52dc65d717ba
+  cloudProjectId: f1feed1e-16bd-4e70-a6f6-6fedea9c6954
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: virtue (1)
+  projectName: virtue
   organizationId: unity_mkpugzy8m1ka3w
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
