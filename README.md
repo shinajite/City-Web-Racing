@@ -4,8 +4,9 @@ henohenomoheji
 
 ## Play Game
 ### 1. Download the release file
-url<br>
-![addRepoImage](../readmeImages/2023-11-20 155939.png)
+https://github.com/shinajite/City-Web-Racing/releases<br>
+go to releases and download the zip file appropriate for your device.
+![downloadzip](../readmeImages/2023-11-20 155939.png)
 
 ### 2. Open the downloaded file
 find the downloaded file in Explorer or Finder and open it.
@@ -18,7 +19,7 @@ Enjoy!
 https://docs.github.com/ja/get-started/getting-started-with-git/about-remote-repositories#cloning-with-https-urls<br>
 you can use GitHub Desktop, CMD, SSH, CLI, or Subversion.
 ofcourse, you can use this as download.
-![addRepoImage](./readmeImages/2023-11-20%20163234.png)
+![addRepoImage](./readmeImages/2023-11-24%063723.png)
 
 ### 2. Open in Unity
 first, you have to install unity hub.<br>
